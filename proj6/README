@@ -1,0 +1,3 @@
+1. Vincent Nguyen. I receive no external assistance.
+2. I spent around 3-4 hours on this. However, I put this assignment off to work on studying for exams.
+3. An aha moment I had was when I realized the entire language syntax could be represented in a fixed set of string to binary mappings (developing a DFA/NFA would be a lot better/scalable/advanced but I wanted to experience what it was like taking this path). I certainly think using DFAs and NFAs is a lot better of an experiment and it helps the language make more sense instead of writing boilerplate.

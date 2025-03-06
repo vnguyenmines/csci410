@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug assembler",
+            "program": "${workspaceFolder}/target/debug/proj6",
+            "args": [
+                "progtest.asm"
+                // "tests/add/Add.asm"
+                // "tests/max/Max.asm"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build assembler (Debug)",
+            "sourceLanguages": ["rust"]
+        },
+        // {
+        //     "type": "lldb",
+        //     "request": "launch",
+        //     "name": "Debug assembler unit tests",
+        //     "cargo": {
+        //         "args": [
+        //             "test",
+        //             "--no-run"
+        //         ]
+        //     },
+        //     "args": [],
+        //     "preLaunchTask": "Build assembler (Debug)",
+        //     "sourceLanguages": ["rust"]
+        // },
+    ]
+}
