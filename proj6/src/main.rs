@@ -31,8 +31,7 @@ fn main()
     let translated_code_bin: Vec<String> = assembler.translate();
 
     // Output file
-    let split_in_path: Vec<&str> = asm_file_path.split("/").collect::<Vec<&str>>();
-    let split_in_path: Vec<&str> = split_in_path[split_in_path.len() - 1].split(".").collect();
+    let split_in_path: Vec<&str> = asm_file_path.split(".").collect::<Vec<&str>>();
     let out_path = split_in_path[..split_in_path.len() - 1].to_vec().join("") + ".hack";
 
     write(out_path, translated_code_bin.join("\n")).unwrap();

@@ -7,7 +7,7 @@
             "name": "Debug assembler",
             "program": "${workspaceFolder}/target/debug/proj6",
             "args": [
-                "progtest.asm"
+                "tests/progtest.asm"
                 // "tests/add/Add.asm"
                 // "tests/max/Max.asm"
             ],

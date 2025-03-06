@@ -9,5 +9,5 @@ debug:
 
 clean:
 	cargo clean
-	find . -name "*.bak" -type f -delete
+	find . -name "*.hack" -type f -delete
 	rm ./$(OUT)
