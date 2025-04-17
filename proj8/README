@@ -1,0 +1,4 @@
+1. Vincent Nguyen. Good resources that I found helpful was the slides from Nand2Tetris themselves.
+2. I spent a really long time on this project along with procrastinating it a little. Up to 3 weeks
+3. An aha moment was when the order of everything within the assembly code clicked into place. Function definitions come first then the actual main function calling all the defined functions. Explains as to why in programming languages, functions must be defined first/hoisted.
+4. Running make should invoke the cargo build and any needed things

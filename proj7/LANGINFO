@@ -1,0 +1,6 @@
+Rust is needed. Command to install Rust if required:
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+a. Make is just needed to run
+b. Rust, Makefile. The latest/modern versions of both should work
+c. N/A

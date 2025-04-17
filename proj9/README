@@ -1,0 +1,1 @@
+My program starts at the Cmd class. This program is supposed to be a terminal/directory emulator which allows the user to cd to a different absolute directory and retrieve the current working directory. I ran into several snags due to the limitation of the program and lack of knowledge of it.

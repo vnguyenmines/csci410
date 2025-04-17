@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Launch",
+            "program": "${workspaceFolder}/target/debug/proj7",
+            "args": [
+                // "test/StackArithmetic/SimpleAdd/SimpleAdd.vm"
+                // "test/StackArithmetic/StackTest/StackTest.vm"
+                // "test/MemoryAccess/BasicTest/BasicTest.vm"
+                // "test/MemoryAccess/PointerTest/PointerTest.vm"
+                "test/MemoryAccess/StaticTest/StaticTest.vm"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Compile Proj 7"
+        }
+    ],
+    "compounds": []
+}

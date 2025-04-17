@@ -1,0 +1,13 @@
+class Directory {
+  field int counter;
+  field Array contents;
+
+  constructor Directory new() {
+    counter = 0;
+    contents = Array.new(32);
+  }
+
+  constructor mkdir() {
+    contents[]
+  }
+}

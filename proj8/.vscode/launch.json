@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Launch",
+            "program": "${workspaceFolder}/target/debug/proj8",
+            "args": [
+                // "tests/FunctionCalls/FibonacciElement"
+                "tests/FunctionCalls/StaticsTest/"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Compile Proj 8"
+        }
+    ],
+    "compounds": []
+}

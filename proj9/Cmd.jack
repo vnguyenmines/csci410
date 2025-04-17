@@ -1,0 +1,35 @@
+class Cmd {
+    function void main() {
+        var char option;
+        var String path;
+        var boolean run;
+
+        let run = true;
+
+        while (run) {
+            do Output.printString("> ");
+            let option = Keyboard.readChar();
+            let path = "/";
+
+            // Change directory
+            if (option = 99) {
+                let path = Keyboard.readLine("Change to directory: ");
+            }
+            // Exit
+            if (option = 101) {
+                let run = false;
+            }
+            // Go back to root
+            if (option = 46) {
+                let path = "/";
+            }
+            // Print the current directory
+            if (option = 119) {
+                do Output.printString("Currently in ");
+                do Output.printString(path);
+            }
+        }
+
+        return;
+    }
+}
