@@ -1,0 +1,4 @@
+1. Vincent Nguyen
+2. I spent upwards of 2-3 weeks on this since I started in rust and it got overly complicated
+3. An aha moment was realizing how all the methods of the functions clicked together to make the working code altogether
+4. Using Python 3. Pass in the directory with all the .jack files and the output directory is called ./out with all the resulting .xml files

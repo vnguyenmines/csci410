@@ -29,7 +29,7 @@ if __name__ == "__main__":
         file_name = jack_file[:-5]
         # Output file path
         completed_output_name = os.path.join("out", "{}.xml".format(file_name))
-        tokenized_output_name = os.path.join("{}T.xml".format(file_name))
+        tokenized_output_name = os.path.join("out", "{}T.xml".format(file_name))
 
         # Tokenizer
         if OUTPUT_TOKENIZED_CODE:
@@ -68,6 +68,7 @@ if __name__ == "__main__":
 
             tree = xml_et.ElementTree(root)
             xml_et.indent(tree, space="\t", level = 0)
+            os.makedirs(os.path.dirname(tokenized_output_name), exist_ok=True)
             tree.write(tokenized_output_name, encoding="utf-8", xml_declaration=False)
 
         # Running through CompilationEngine
