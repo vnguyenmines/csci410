@@ -1,6 +1,0 @@
-// Comments and whitespace
-// are ignored
-
-if (x < 0) {
-    let quit = "yes";
-}

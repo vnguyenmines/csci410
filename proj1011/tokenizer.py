@@ -11,6 +11,17 @@ class JackTokenizer:
         self.cleaned_code_lines = []
         multi_line_comment = False
         for code_line in self.raw_code_lines:
+            # Continuing multiline comment
+            # does not terminate in current line
+            if multi_line_comment and "*/" not in code_line:
+                continue
+            # does terminate in current line
+            if multi_line_comment and "*/" in code_line:
+                remaining_line = code_line[code_line.index("*/") + 2:]
+                if len(remaining_line.strip()) != 0: self.cleaned_code_lines.append(remaining_line) 
+                multi_line_comment = False
+                code_line = code_line[code_line.index("*/") + 2:]
+            
             code_line = code_line.replace("\n", "")
             code_line = code_line.replace("\t", "")
             if len(code_line) == 0: continue
@@ -20,7 +31,8 @@ class JackTokenizer:
                 continue
             # Comment midway through the line
             elif "//" in code_line:
-                self.cleaned_code_lines.append(code_line[:code_line.index("//")].strip()) 
+                prior_to_comment = code_line[:code_line.index("//")].strip()
+                if len(prior_to_comment) != 0: self.cleaned_code_lines.append(prior_to_comment) 
             # Multiline comment
             elif "/*" in code_line:
                 prior_to_multi_line_comment = code_line[:code_line.index("/*")]
@@ -78,6 +90,8 @@ class JackTokenizer:
                         self.tokens.extend(seperated_tokens)
                     else:
                         self.tokens.append(token)
+            
+        self.tokens = list(filter(lambda x: x.strip() != "", self.tokens))
 
     def has_more_tokens(self) -> bool:
         return len(self.tokens) != 0

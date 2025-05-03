@@ -8,11 +8,9 @@
       "program": "main.py",
       "console": "externalTerminal",
       "args": [
-        // "test_10/ArrayTest/Main.jack"
-        // "test_10/ExpressionLessSquare/Main.jack"
-        // "test_10/ExpressionLessSquare/Square.jack"
-        // "test_10/ExpressionLessSquare/"
-        "test_10/ArrayTest/"
+        "test_10/ExpressionLessSquare/"
+        // "test_10/ArrayTest/"
+        // "test_10/Square"
       ],
       "cwd": "${workspaceFolder}",
     }

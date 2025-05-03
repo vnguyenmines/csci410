@@ -364,6 +364,8 @@ class CompilationEngine:
                     CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
                     self.tokenizer.advance()
                     self.compile_expression(term_root)
+                    CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+                    self.tokenizer.advance()
                 elif self.tokenizer.symbol() in ["~", "-"]:
                     CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
                     self.tokenizer.advance()
@@ -426,11 +428,12 @@ class CompilationEngine:
         tree = xml_et.ElementTree(self.class_root)
         xml_et.indent(tree, space="", level = 0)
         # xml_et.indent(tree, space="\t", level = 0)
+        # if os.path.exists(os.path.dirname(self.output_path)):
+        #     os.rmdir(os.path.dirname())
         os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
-        os.
-        if not os.path.exists(self.output_path):
-            with open(self.output_path, "w+") as f:
-                pass
+        # if not os.path.exists(self.output_path):
+        #     with open(self.output_path, "w+") as f:
+        #         pass
         tree.write(self.output_path, encoding="utf-8", xml_declaration=False, short_empty_elements=False)
 
     def __xml_token(root, tag: str, value: str):
