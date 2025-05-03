@@ -6,11 +6,15 @@
       "type": "debugpy",
       "request": "launch",
       "program": "main.py",
-      "console": "integratedTerminal",
+      "console": "externalTerminal",
       "args": [
-        // "test/ArrayTest/Main.jack"
-        "Prog.jack"
-      ]
+        // "test_10/ArrayTest/Main.jack"
+        // "test_10/ExpressionLessSquare/Main.jack"
+        // "test_10/ExpressionLessSquare/Square.jack"
+        // "test_10/ExpressionLessSquare/"
+        "test_10/ArrayTest/"
+      ],
+      "cwd": "${workspaceFolder}",
     }
   ],
   "compounds": []

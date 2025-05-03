@@ -1,0 +1,45 @@
+        # case TokenType.IDENTIFIER:
+            #     CompilationEngine.__xml_token(term_root, "identifier", self.tokenizer.identifier())
+            #     self.tokenizer.advance()
+
+            #     # while self.tokenizer.token_type() == TokenType.SYMBOL and self.tokenizer.symbol() not in [";", ")"]:
+            #     match self.tokenizer.symbol():
+            #         case "[":
+            #             CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #             self.tokenizer.advance()
+            #             self.compile_expression(term_root)
+            #             CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #         case ".":
+            #             # Dot operator
+            #             CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #             self.tokenizer.advance()
+            #             # RHS of term
+            #             CompilationEngine.__xml_token(term_root, "identifier", self.tokenizer.identifier())
+            #             self.tokenizer.advance()
+
+            #             CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #             self.tokenizer.advance()
+
+            #             # self.compile_expression_list(term_root)
+            #             self.compile_term(term_root)
+
+            #             CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #         case "(":
+            #             # opening symbol (
+            #             CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #             self.tokenizer.advance()
+            #             # if self.tokenizer.token_type != TokenType.SYMBOL and self.tokenizer.symbol != ")":
+            #             # if self.tokenizer.token_type != TokenType.SYMBOL:
+            #                 # self.compile_term(term_root)
+            #             self.compile_expression_list(term_root)
+            #             CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+
+            # case TokenType.SYMBOL:
+            #     if self.tokenizer.symbol() == "(":
+            #         CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #         self.tokenizer.advance()
+            #         self.compile_expression(term_root)
+            #     elif self.tokenizer.symbol() == "~" or self.tokenizer.symbol() == "-":
+            #         CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
+            #         self.tokenizer.advance()
+            #         self.compile_term()

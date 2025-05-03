@@ -43,35 +43,50 @@ class JackTokenizer:
         # Tokens
         self.tokens = []
         for line in self.cleaned_code_lines:
+            if len(line) == 0: continue
             split_line = []
+            # Detecting if any strings are present
+            if "\"" in line and "\\\"" not in line:
+                split_line = line.split("\"")
+                split_line[1] = "\"" + split_line[1] + "\""
+            else:
+                split_line.append(line)
             # Removed whitespaces ande extract any symbols that are grouped along in the same token
-            for token in line.split(" "):
-                # Check if any symbols are present in the current token
-                symbols_present = []
-                for sym in symbols:
-                    if sym in token:
-                        symbols_present.append(sym)
-                # Handling when symbols are present 
-                if len(symbols_present) != 0:
-                    seperated_tokens = []
-                    for s in symbols_present:
-                        # first part before symbol
-                        beg = token[:token.index(s)]
-                        if len(beg) != 0: seperated_tokens.append(beg)
-                        # symbol
-                        seperated_tokens.append(s)
-                        # remaining part of the symbol
-                        token = token[token.index(s) + 1:]
-                    if len(token) != 0: seperated_tokens.append(token)
-                    self.tokens.extend(seperated_tokens)
-                else:
-                    self.tokens.append(token)
+            for s in split_line:
+                if s[0] == "\"" and s[len(s) - 1] == "\"":
+                    self.tokens.append(s) 
+                    continue
+                for token in s.split(" "):
+                    # Handling strings
+                    # Check if any symbols are present in the current token
+                    symbols_present = []
+                    for c in token:
+                        if c in symbols:
+                            symbols_present.append(c)
+                    # Handling when symbols are present 
+                    if len(symbols_present) != 0:
+                        seperated_tokens = []
+                        for s in symbols_present:
+                            # first part before symbol
+                            beg = token[:token.index(s)]
+                            if len(beg) != 0: seperated_tokens.append(beg)
+                            # symbol
+                            seperated_tokens.append(s)
+                            # remaining part of the symbol
+                            token = token[token.index(s) + 1:]
+                        if len(token) != 0: seperated_tokens.append(token)
+                        self.tokens.extend(seperated_tokens)
+                    else:
+                        self.tokens.append(token)
 
     def has_more_tokens(self) -> bool:
         return len(self.tokens) != 0
 
     def advance(self) -> str:
         return self.tokens.pop(0)
+    
+    def curr_token(self) -> str:
+        return self.tokens[0]
 
     def token_type(self) -> TokenType:
         curr_token = self.tokens[0].strip()
@@ -82,11 +97,13 @@ class JackTokenizer:
         elif curr_token in symbols:
             return TokenType.SYMBOL
         # Literals
-        # elif re.fullmatch("[1-9][0-9]*", curr_token):
+        # regex: one or more characters in the range of 0-9
         elif re.fullmatch("[0-9]+", curr_token):
             return TokenType.INT_CONST
-        elif re.fullmatch("^[a-z_][a-zA-Z0-9_]*", curr_token):
+        # regex: the first character must be an alphabetical character. Following characters can be zero or more alphabetical, numerical, or an underscore
+        elif re.fullmatch("^[a-zA-Z][a-zA-Z0-9_]*", curr_token):
             return TokenType.IDENTIFIER
+        # regex: surrounding quotation marks and any character can be present within the string
         elif re.fullmatch("\".*\"", curr_token):
                 return TokenType.STRING_CONST
         else: 
@@ -135,6 +152,8 @@ class JackTokenizer:
                 keyword_type = Keyword.WHILE
             case "return":
                 keyword_type = Keyword.RETURN
+            case "do":
+                keyword_type = Keyword.DO
             case _:
                 raise Exception(f"Invalid keyword \"{self.tokens[0]}\"")
         return (keyword_type, self.tokens[0])
