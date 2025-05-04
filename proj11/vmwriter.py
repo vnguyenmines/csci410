@@ -34,7 +34,6 @@ class VMWriter:
         self.output_lines.append("goto {}".format(label))
 
     def write_if(self, label):
-        self.output_lines.append("")
         self.output_lines.append("if-goto {}".format(label))
 
     def write_call(self, class_name, function_name, arg_c):

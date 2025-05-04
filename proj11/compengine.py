@@ -73,6 +73,7 @@ class CompilationEngine:
         # Data type
         elif self.tokenizer.token_type() == TokenType.IDENTIFIER:
             CompilationEngine.__xml_token(var_root, "identifier", self.tokenizer.identifier())
+            var_type = self.tokenizer.identifier()
             self.tokenizer.advance()
 
         # var identifier
@@ -133,7 +134,8 @@ class CompilationEngine:
         self.tokenizer.advance()
         # SYMBOL_TABLE: METHOD
         if subroutine_type == "method":
-            self.symbol_table.define("this", self.class_name, "arg")
+            # self.symbol_table.define("this", self.class_name, "arg")
+            pass
         # vars
         local_c = 0
         while self.tokenizer.keyword()[1] == "var":
@@ -142,7 +144,7 @@ class CompilationEngine:
         self.vm_writer.write_function(self.class_name, subroutine_name, local_c)
         # VM_OUT: Constructor
         if subroutine_type == "constructor":
-            self.vm_writer.write_push("constant", self.symbol_table.var_count(ValType.FIELD))
+            self.vm_writer.write_push("constant", self.symbol_table.var_count("field"))
             self.vm_writer.write_call("Memory", "alloc", 1)
             self.vm_writer.write_pop("pointer", 0)
         # VM_OUT: METHOD
@@ -165,14 +167,19 @@ class CompilationEngine:
             # Keyword to define the type
             if self.tokenizer.token_type() == TokenType.KEYWORD:
                 CompilationEngine.__xml_token(params_root, "keyword", self.tokenizer.keyword()[1])
+                param_type = self.tokenizer.keyword()[1]
                 self.tokenizer.advance()
             # Parameter identifier
             elif self.tokenizer.token_type() == TokenType.IDENTIFIER:
                 CompilationEngine.__xml_token(params_root, "identifier", self.tokenizer.identifier())
+                param_type = self.tokenizer.identifier()
                 self.tokenizer.advance()
                 
             CompilationEngine.__xml_token(params_root, "identifier", self.tokenizer.identifier())
+            param_ident = self.tokenizer.identifier()
             self.tokenizer.advance()
+
+            self.symbol_table.define(param_ident, param_type, "arg")
 
             if self.tokenizer.token_type() == TokenType.SYMBOL and self.tokenizer.symbol() == ",":
                 CompilationEngine.__xml_token(params_root, "symbol", self.tokenizer.symbol())
@@ -203,7 +210,6 @@ class CompilationEngine:
         CompilationEngine.__xml_token(var_root, "identifier", self.tokenizer.identifier())
         var_name = self.tokenizer.identifier()
         self.tokenizer.advance()
-
         self.symbol_table.define(var_name, var_type, "var")
 
         # Multiple variables defined in one line
@@ -211,7 +217,9 @@ class CompilationEngine:
             CompilationEngine.__xml_token(var_root, "symbol", self.tokenizer.symbol())
             self.tokenizer.advance()
             CompilationEngine.__xml_token(var_root, "identifier", self.tokenizer.identifier())
+            var_name = self.tokenizer.identifier()
             self.tokenizer.advance()
+            self.symbol_table.define(var_name, var_type, "var")
             var_c += 1
 
         # closing symbol ;
@@ -248,10 +256,13 @@ class CompilationEngine:
 
         # identifier
         CompilationEngine.__xml_token(let_statement_root, "identifier", self.tokenizer.identifier())
+        var_name = self.tokenizer.identifier()
         self.tokenizer.advance()
 
         # array declaration
+        is_array = False
         if self.tokenizer.token_type() == TokenType.SYMBOL and self.tokenizer.symbol() == "[":
+            is_array = True
             # starting symbol [
             CompilationEngine.__xml_token(let_statement_root, "symbol", self.tokenizer.symbol())
             self.tokenizer.advance()
@@ -261,7 +272,7 @@ class CompilationEngine:
             CompilationEngine.__xml_token(let_statement_root, "symbol", self.tokenizer.symbol())
             self.tokenizer.advance()
 
-            # self.vm_writer.
+            self.push_var(var_name)
             self.vm_writer.write_arithmetic("add")
 
         # equal symbol
@@ -271,6 +282,16 @@ class CompilationEngine:
         # statement
         self.compile_expression(let_statement_root)
         
+        if is_array:
+            self.vm_writer.write_pop("temp", 0)
+            self.vm_writer.write_pop("pointer", 1)
+            self.vm_writer.write_push("temp", 0)
+            self.vm_writer.write_pop("that", 0)
+        else:
+            let_kind = self.symbol_table.kind_of(var_name)
+            let_idx = self.symbol_table.index_of(var_name)
+            self.vm_writer.write_pop(var_segment_type[let_kind] if let_kind != None else "local", let_idx)
+
         # closing ;
         CompilationEngine.__xml_token(let_statement_root, "symbol", self.tokenizer.symbol())
         self.tokenizer.advance()
@@ -326,9 +347,11 @@ class CompilationEngine:
 
     def compile_while(self, root):
         while_statement_root = xml_et.SubElement(root, "whileStatement")
-        while_id = self.__hash_label("while")
-        while_start_lbl = while_id + ".start"
-        while_end_lbl = while_id + ".end"
+        # while_id = self.__hash_label("while")
+        # while_start_lbl = while_id + ".start"
+        # while_end_lbl = while_id + ".end"
+        while_start_lbl = self.__hash_label()
+        while_end_lbl = self.__hash_label()
 
         # while keyword
         CompilationEngine.__xml_token(while_statement_root, "keyword", self.tokenizer.keyword()[1])
@@ -363,9 +386,11 @@ class CompilationEngine:
 
     def compile_if(self, root):
         if_statement_root = xml_et.SubElement(root, "ifStatement")
-        if_id = self.__hash_label("if")
-        if_true_lbl = if_id + ".start"
-        if_end_lbl = if_id + ".end"
+        # if_id = self.__hash_label("if")
+        # if_true_lbl = if_id + ".start"
+        # if_end_lbl = if_id + ".end"
+        if_true_lbl = self.__hash_label()
+        if_end_lbl = self.__hash_label()
 
         # if keyword
         CompilationEngine.__xml_token(if_statement_root, "keyword", self.tokenizer.keyword()[1])
@@ -380,9 +405,8 @@ class CompilationEngine:
         CompilationEngine.__xml_token(if_statement_root, "symbol", self.tokenizer.symbol())
         self.tokenizer.advance()
 
-        self.vm_writer.write_if(if_true_lbl)
-        self.vm_writer.write_goto(if_end_lbl)
-        self.vm_writer.write_label(if_true_lbl)
+        self.vm_writer.write_arithmetic("not")
+        self.vm_writer.write_if(if_end_lbl)
 
         # starting symbol {
         CompilationEngine.__xml_token(if_statement_root, "symbol", self.tokenizer.symbol())
@@ -406,7 +430,9 @@ class CompilationEngine:
             CompilationEngine.__xml_token(if_statement_root, "symbol", self.tokenizer.symbol())
             self.tokenizer.advance()
         
+        self.vm_writer.write_goto(if_true_lbl)
         self.vm_writer.write_label(if_end_lbl)
+        self.vm_writer.write_label(if_true_lbl)
 
     def compile_return(self, root):
         return_statement_root = xml_et.SubElement(root, "returnStatement")
@@ -466,9 +492,11 @@ class CompilationEngine:
                 if self.tokenizer.keyword()[1] == "this":
                     self.vm_writer.write_push("pointer", 0)
                 else:
-                    self.vm_writer.write_int(0)
                     if self.tokenizer.keyword()[1] == "true":
-                        self.vm_writer.write_arithmetic("not")
+                        self.vm_writer.write_int(1)
+                        self.vm_writer.write_arithmetic("neg")
+                    else:
+                        self.vm_writer.write_int(0)
                 self.tokenizer.advance()
             case TokenType.INT_CONST:
                 CompilationEngine.__xml_token(term_root, "integerConstant", self.tokenizer.int_val())
@@ -514,7 +542,7 @@ class CompilationEngine:
                     self.push_var(prev_val)
                     self.vm_writer.write_arithmetic("add")
                     self.vm_writer.write_pop("pointer", 1)
-                    self.vm_writer.write_pop("that", 0)
+                    self.vm_writer.write_push("that", 0)
 
                     # closing symbol ]
                     CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
@@ -546,11 +574,12 @@ class CompilationEngine:
 
                     CompilationEngine.__xml_token(term_root, "symbol", self.tokenizer.symbol())
                     self.tokenizer.advance()
-                    
+
                     self.vm_writer.write_call(full_func_name[0], full_func_name[1], arg_c)
-                    self.vm_writer.write_pop("temp", 0)
+                    # self.vm_writer.write_pop("temp", 0)
                 elif prev_is_identifier:
                     CompilationEngine.__xml_token(term_root, "identifier", prev_val) 
+                    self.push_var(prev_val)
                 elif self.tokenizer.token_type() == TokenType.SYMBOL and self.tokenizer.symbol() == "(":
                     self.tokenizer.advance()
 
@@ -579,7 +608,7 @@ class CompilationEngine:
     def push_var(self, identifier: str):
         kind = self.symbol_table.kind_of(identifier)
         index = self.symbol_table.index_of(identifier)
-        self.vm_writer.write_push(var_segment_type[kind], index)
+        self.vm_writer.write_push(var_segment_type[kind] if kind != None else "local", index)
 
     def output_tokenized_parsed_code(self):
         tree = xml_et.ElementTree(self.class_root)
@@ -595,8 +624,9 @@ class CompilationEngine:
         element.text = value
         return element
     
-    def __hash_label(self, label) -> str:
-        label_to_hash = str(label + str(self.label_count))
+    # def __hash_label(self, label) -> str:
+    def __hash_label(self) -> str:
+        # label_to_hash = str(label + str(self.label_count))
         # hash_val = "{}_{}".format(label, str(hash(label_to_hash)))
         hash_val = "{}_{}".format(self.class_name, str(self.label_count))
         self.label_count += 1
