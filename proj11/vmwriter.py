@@ -48,6 +48,9 @@ class VMWriter:
     def write_vm_file(self):
         for line in self.output_lines:
             if "label" not in line and "function" not in line:
-                self.output_file.write("\t" + line + "\n")
+                self.output_file.write("    " + line + "\n")
             else:
                 self.output_file.write(line + "\n")
+        
+        self.output_file.write("")
+        self.output_file.close()
