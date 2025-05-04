@@ -1,5 +1,6 @@
 # Project 10/11
 # Vincent Nguyen
+import shutil
 import sys
 import os
 import xml.etree.ElementTree as xml_et
@@ -8,6 +9,8 @@ from language import TokenType
 from compengine import CompilationEngine
 
 OUTPUT_TOKENIZED_CODE = False
+
+outdir = "./out"
 
 # Instead of JackAnalyzer, we are using this main function to invoke JackTokenizer and CompilationEngine
 if __name__ == "__main__":
@@ -23,6 +26,9 @@ if __name__ == "__main__":
         if path_arg[-1:] == "/":
             path_arg = path_arg[:-1]
         jack_files = list(filter(lambda x: x[-5:] == ".jack", os.listdir(path_arg)))
+
+    if os.path.exists(outdir):
+        shutil.rmtree(outdir)
 
     # Tokenize and parse all Jack files
     for jack_file in jack_files:

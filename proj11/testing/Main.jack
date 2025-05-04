@@ -1,8 +1,0 @@
-class Main {
-   function void main() {
-        var int x;
-        let x = true;
-        let x = false;
-        return;
-    }
-}

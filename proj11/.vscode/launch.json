@@ -8,15 +8,12 @@
       "program": "main.py",
       "console": "externalTerminal",
       "args": [
-        // "test_10/ExpressionLessSquare/"
-        // "test_10/ArrayTest/"
-        // "test_10/Square"
-
-        "test_11/Average/"
-        // "test_11/ComplexArrays/"
-          // "test_11/Square/"
-          // "test_11/Pong/"
-          // "testing/"
+        "tests/Average/"
+        // "tests/ComplexArrays/"
+        // "tests/ConvertToBin/"
+        // "tests/Pong/"
+        // "tests/Seven/"
+        // "tests/Square/"
       ],
       "cwd": "${workspaceFolder}",
     }

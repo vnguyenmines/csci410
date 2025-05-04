@@ -88,7 +88,9 @@ class CompilationEngine:
             CompilationEngine.__xml_token(var_root, "symbol", self.tokenizer.symbol())
             self.tokenizer.advance()
             CompilationEngine.__xml_token(var_root, "identifier", self.tokenizer.identifier())
+            var_name = self.tokenizer.identifier()
             self.tokenizer.advance()
+            self.symbol_table.define(var_name, var_type, var_kind)
 
         # closing symbol ;
         CompilationEngine.__xml_token(var_root, "symbol", self.tokenizer.symbol())
@@ -117,6 +119,10 @@ class CompilationEngine:
         subroutine_name = self.tokenizer.identifier()
         self.tokenizer.advance()
 
+        # SYMBOL_TABLE: METHOD
+        if subroutine_type == "method":
+            self.symbol_table.define("this", self.class_name, "arg")
+
         # Parameters
         # symbol begin (
         CompilationEngine.__xml_token(subroutine_root, "symbol", self.tokenizer.symbol())
@@ -132,10 +138,6 @@ class CompilationEngine:
         # starting symbol {
         CompilationEngine.__xml_token(subroutine_body, "symbol", self.tokenizer.symbol())
         self.tokenizer.advance()
-        # SYMBOL_TABLE: METHOD
-        if subroutine_type == "method":
-            # self.symbol_table.define("this", self.class_name, "arg")
-            pass
         # vars
         local_c = 0
         while self.tokenizer.keyword()[1] == "var":
@@ -416,6 +418,8 @@ class CompilationEngine:
         # ending symbol }
         CompilationEngine.__xml_token(if_statement_root, "symbol", self.tokenizer.symbol())
         self.tokenizer.advance()
+        self.vm_writer.write_goto(if_true_lbl)
+        self.vm_writer.write_label(if_end_lbl)
 
         if self.tokenizer.token_type() == TokenType.KEYWORD and self.tokenizer.keyword()[0] == Keyword.ELSE:
             # else keyword
@@ -430,8 +434,6 @@ class CompilationEngine:
             CompilationEngine.__xml_token(if_statement_root, "symbol", self.tokenizer.symbol())
             self.tokenizer.advance()
         
-        self.vm_writer.write_goto(if_true_lbl)
-        self.vm_writer.write_label(if_end_lbl)
         self.vm_writer.write_label(if_true_lbl)
 
     def compile_return(self, root):
